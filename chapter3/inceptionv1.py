@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
+
+# 首先定义一个包含conv与ReLU的基础卷积类
 class BasicConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, padding=0):
         super(BasicConv2d, self).__init__()
@@ -9,6 +11,7 @@ class BasicConv2d(nn.Module):
         x = self.conv(x)
         return F.relu(x, inplace=True)
 
+# Inceptionv1的类，初始化时需要提供各个子模块的通道数大小
 class Inceptionv1(nn.Module):
      def __init__(self, in_dim, hid_1_1, hid_2_1, hid_2_3, hid_3_1, out_3_5, out_4_1):
           super(Inceptionv1, self).__init__()
@@ -30,6 +33,7 @@ class Inceptionv1(nn.Module):
           b2 = self.branch3x3(x)
           b3 = self.branch5x5(x)
           b4 = self.branch_pool(x)
+          # 将这四个子模块沿着通道方向进行拼接
           output = torch.cat((b1, b2, b3, b4), dim=1)
           return output
 
